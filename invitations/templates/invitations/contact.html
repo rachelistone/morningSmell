@@ -1,0 +1,13 @@
+{% extends 'invitations/base.html' %}
+{% block content %}
+<h1 class="title">יצירת קשר</h1>
+<div class="content-section">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset>{{form.as_p}}</fieldset>
+        <div class="btn-wrapper">
+        <button class="color-btn" type="submit">אישור</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

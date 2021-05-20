@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="he">
+	{% load static %}
+	<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="content-width-device, initial-scale=1,maximum-scale=1, minimum-scale=1"/>
+			<title>ריח הבוקר</title>
+		 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous"-->
+			<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+	</head>
+
+	<body dir=rtl>
+	<header>
+		<nav>
+			<div class="wrapper">
+				<ul class="nav_links">
+					<li><a href="{% url 'home' %}" class="menu-elem">ראשי</a></li>
+					<li><a href="{% url 'products' %}" class="menu-elem">בחירת מוצרים</a></li>
+					<li><a href="{% url 'contact' %}" class="menu-elem">צור קשר</a></li>
+				</ul>
+				{% if user.is_authenticated %}
+				<ul class="nav_links">
+					<li><a href="{% url 'profil' %}" class="menu-elem">הפרטים שלי</a></li>
+					<li><a href="{% url 'cart' %}" class="menu-elem">התפריט שלי</a></li>
+					<li><a href="{% url 'history' %}" class="menu-elem">היסטוריה</a></li>
+				</ul>
+				{% endif %}
+			</div>
+		</nav>
+		<div class="logo"><img width="250px" src="{% static 'images/logomorningsmell.png' %}"></div>
+		{% if user.is_authenticated %}
+        <div>החשבון של {{user}}</div>
+        <br>
+        <form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+			<div class="btn-wrapper"><button type="submit" class="color-btn">התנתק</button></div>
+        </form>
+
+		{% else %}
+		<div class="left-btn">
+			<div class="btn-wrapper"><a href="{% url 'signup' %}" class="color-btn">הרשמה</a></div>
+			<div class="btn-wrapper"><a href="{% url 'login' %}" class="color-btn">כניסה</a></div>
+		</div>
+		{% endif %}
+	</header>
+
+	<div class="content">
+		{% block content %} {% endblock %}
+	</div>
+	</body>
+</html>

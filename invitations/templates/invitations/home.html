@@ -1,0 +1,14 @@
+{% extends 'invitations/base.html' %}
+{% block content %}
+{% load static %}
+    <img width="10%" src="{% static 'images/left-arrow.png' %}" alt="">
+    <img width="75%" src="{% static 'images/bread1.png' %}" alt="">
+    <img width="10%" src="{% static 'images/right-arrow.png' %}" alt="">
+    <h1 class="what">לחמניות טריות ודברי חלב כל בוקר עד דלת ביתך..</h1>
+    <div class="how">
+    <h1>איך זה עובד?<br>פשוט נכנסים לבחירת מוצרים, בוחרים תפריט יומי, מעדכנים את הפרטים ובבוקר מגיע השליח עם ארוחת הבוקר..</h1>
+        <div class="btn-wrapper">
+        <a class="color-btn" href="{% url 'products' %}">לבחירת מוצרים</a>
+        </div>
+    </div>
+{% endblock %}

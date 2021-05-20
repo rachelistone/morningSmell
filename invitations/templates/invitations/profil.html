@@ -1,0 +1,17 @@
+{% extends 'invitations/base.html' %}
+{% block content %}
+<h3 class="title">פרטי הפרופיל שלי</h3>
+{% if addr %}
+<div class="content-section">
+    <h4>כתובת:</h4>
+    <ul>
+    {% for name, value in address.get_fields %}
+    {% if value != 'None' and name != 'ID' and name != 'user' %}
+        <li>{{name}}: {{value}}</li>
+    {% endif %}
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+<a href="{% url 'address-update' %}">עדכון כתובת</a>
+{% endblock %}
