@@ -57,7 +57,7 @@ class ProdUser(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount = models.IntegerField()
 
-    weekDay = ((6,'SUNDAY'),(0,'MONDAY'),(1,'TUESDAY'),(2,'WEDNESDAY'),(3,'THURSDAY'),(4,'FRIDAY'))
+    weekDay = ((6,'יום ראשון'),(0,'יום שני'),(1,'יום שלישי'),(2,'יום רביעי'),(3,'יום חמישי'),(4,'יום שישי'))
 
     def get_tmrw():
         weekday=date.now().weekday()

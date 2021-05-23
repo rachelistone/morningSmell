@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Contact, Product, Address
 from django.contrib import messages
 from django.db import IntegrityError
-from .forms import UserRegistrationForm, ContactForm, UserLoginForm, AddressForm
+from .forms import UserRegistrationForm, ContactForm, UserLoginForm, AddressForm, ProdUserAddForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 
@@ -14,9 +14,9 @@ def products(request):
     if request.method=='GET':
         products_lc = Product.objects.filter(category='לחמניות')
         products_mz = Product.objects.filter(category='מיצים')
-        return render(request, 'invitations/products.html', {'products_lc': products_lc, 'products_mz': products_mz})
+        return render(request, 'invitations/products.html', {'products_lc': products_lc, 'products_mz': products_mz, 'form': ProdUserAddForm()})
     else:
-        pass
+        print(request.POST['amount'], request.POST['day'])
 
 def cart(request):
     content = {}

@@ -1,8 +1,9 @@
 from django import forms
-from .models import Contact, Address
+from .models import Contact, Address, ProdUser
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+from datetime import datetime as date
 
 class UserRegistrationForm(UserCreationForm):
     username = forms.CharField(label='שם מלא:')
@@ -47,3 +48,16 @@ class AddressForm(forms.ModelForm):
         model = Address
         fields = ['town','street', 'house_num', 'apt_num','level', 'enter']
 
+class ProdUserAddForm(forms.ModelForm):
+    amount = forms.IntegerField(label="בחר כמות:")
+    weekDay = ((6,'יום ראשון'),(0,'יום שני'),(1,'יום שלישי'),(2,'יום רביעי'),(3,'יום חמישי'),(4,'יום שישי'))
+
+    def get_tmrw():
+        weekday=date.now().weekday()
+        if weekday==4:
+            return weekday+2
+        return (weekday+1) % 7
+    day = forms.ChoiceField(label="היום הנבחר:", choices=weekDay, initial=get_tmrw())
+    class Meta:
+        model = ProdUser
+        fields = ['amount', 'day']
