@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Contact, Product, Address
+from .models import Contact, Product, Address, ProdUser
 from django.contrib import messages
 from django.db import IntegrityError
 from .forms import UserRegistrationForm, ContactForm, UserLoginForm, AddressForm, ProdUserAddForm
@@ -11,16 +11,22 @@ def home(request):
     return render(request, 'invitations/home.html', content)
     
 def products(request):
+    products_lc = Product.objects.filter(category='לחמניות')
+    products_mz = Product.objects.filter(category='מיצים')
     if request.method=='GET':
-        products_lc = Product.objects.filter(category='לחמניות')
-        products_mz = Product.objects.filter(category='מיצים')
         return render(request, 'invitations/products.html', {'products_lc': products_lc, 'products_mz': products_mz, 'form': ProdUserAddForm()})
     else:
-        print(request.POST['amount'], request.POST['day'])
+        form = ProdUserAddForm(request.POST)
+        prodUser = form.save(commit=False)
+        prodUser.user = request.user
+        prodUser.product = get_object_or_404(Product, pk=request.POST['product'])
+        prodUser.save()
+        return render(request, 'invitations/products.html', {'products_lc': products_lc, 'products_mz': products_mz, 'form': ProdUserAddForm(), 'message':'הפריט נוסף בהצלחה!'})
+
 
 def cart(request):
-    content = {}
-    return render(request, 'invitations/cart.html', content)
+    myproducts = ProdUser.objects.filter(user=request.user)
+    return render(request, 'invitations/cart.html', {'content':myproducts})
 
 def profil(request):
     if Address.objects.filter(user=request.user):

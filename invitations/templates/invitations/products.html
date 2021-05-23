@@ -3,6 +3,10 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 <div class="row">
+	{% if message %}
+		<p>{{message}}</p>
+		<a href="{% url 'cart' %}">לצפייה בתפריט</a>
+	{% endif %}
 	<h1  class="title">לחמניות</h1>
 	{% for product in products_lc %}
 	<div class="col-lg-4">
@@ -11,7 +15,12 @@
 		<div class="under-pic">
 			<p>{{product.product_name}}</p>
 			<p>{{product.price}}</p>
-			<button class="mybtn">הוסף לסל</button>
+			<form action="{% url 'products' %}" method ="POST">
+				{% csrf_token %}
+				<fieldset display="block" class="add">{{form.as_p}}</fieldset>
+				<input name="product" type="hidden" value="{{product.id}}">
+				<button class="mybtn" type="submit" >הוסף לסל</button>
+			</form>
 		</div>
 		</div>
 	</div>

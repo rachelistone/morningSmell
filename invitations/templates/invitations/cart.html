@@ -1,4 +1,24 @@
 {% extends 'invitations/base.html' %}
 {% block content %}
-<h3>התפריט שלי</h3>
+<h3 class = "title">התפריט שלי</h3>
+{% regroup content by day as daysList %}
+
+<ul>
+    {% for day in daysList %}
+        <li>יום:{{ day.grouper }}
+            <ul>
+            {% for produser in day.list %}
+                <li>{{ produser.product.name }}<br>
+                    <img src="{{ produser.product.picture.url }}" width="100px" height="100px" alt=""><br>
+                    מחיר:{{ produser.product.price }}
+                    כמות:{{ produser.amount }}
+                </li>
+            {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
+<hr>
+<h1  class="title">סך הכל לשבוע:</h1>
+<button class="mybtn" type="submit" >לתשלום</button>
 {% endblock %}
