@@ -5,29 +5,33 @@ from django.db import IntegrityError
 from .forms import UserRegistrationForm, ContactForm, UserLoginForm, AddressForm, ProdUserAddForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     content = {}
     return render(request, 'invitations/home.html', content)
-    
+
 def products(request):
-    products_lc = Product.objects.filter(category='לחמניות')
-    products_mz = Product.objects.filter(category='מיצים')
+    products = Product.objects.all()
     if request.method=='GET':
-        return render(request, 'invitations/products.html', {'products_lc': products_lc, 'products_mz': products_mz, 'form': ProdUserAddForm()})
+        return render(request, 'invitations/products.html', {'products': products, 'form': ProdUserAddForm()})
     else:
-        form = ProdUserAddForm(request.POST)
-        prodUser = form.save(commit=False)
-        prodUser.user = request.user
-        prodUser.product = get_object_or_404(Product, pk=request.POST['product'])
-        prodUser.save()
-        return render(request, 'invitations/products.html', {'products_lc': products_lc, 'products_mz': products_mz, 'form': ProdUserAddForm(), 'message':'הפריט נוסף בהצלחה!'})
+        try:
+            form = ProdUserAddForm(request.POST)
+            prodUser = form.save(commit=False)
+            prodUser.user = request.user
+            prodUser.product = get_object_or_404(Product, pk=request.POST['product'])
+            prodUser.save()
+            return render(request, 'invitations/products.html', {'products': products, 'form': ProdUserAddForm(), 'message':'הפריט נוסף בהצלחה!'})
+        except ValueError:
+            return redirect('login')
 
-
+@login_required
 def cart(request):
     myproducts = ProdUser.objects.filter(user=request.user)
     return render(request, 'invitations/cart.html', {'content':myproducts})
 
+@login_required
 def profil(request):
     if Address.objects.filter(user=request.user):
         content = {'address': get_object_or_404(Address, user=request.user), 'addr':1}
@@ -35,6 +39,7 @@ def profil(request):
     else:
         return render(request, 'invitations/profil.html')
 
+@login_required
 def address(request):
     if request.method == 'GET':
         return render(request, 'invitations/address-update.html', {'form': AddressForm()})
@@ -48,10 +53,12 @@ def address(request):
         except ValueError:
             return render(request, 'invitations/address-update.html', {'form': AddressForm(), 'error':'כתובת לא מתאימה'})
 
+@login_required
 def history(request):
     content = {}
     return render(request, 'invitations/history.html')
-    
+
+@login_required
 def checkout(request):
     content = {}
     return render(request, 'invitations/checkout.html', content)
@@ -113,6 +120,7 @@ def userlogin(request):
             login(request, user)
             return redirect('cart')
 
+@login_required
 def userlogout(request):
     # print(request,'/n')
     # dir(request)

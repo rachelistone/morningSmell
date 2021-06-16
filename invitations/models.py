@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime as date
 from django.conf import settings
 
 
@@ -21,13 +20,9 @@ class Contact(models.Model):
 User.add_to_class('phone',models.CharField(blank=True, null=True, max_length=10))
 
 class Product(models.Model):
-    class Categories(models.TextChoices):
-        LH = 'לחמניות'
-        HL = 'מוצרי חלב'
-        MZ = 'מיצים'
-        MA = 'מאפים'
+    Categories = (( 'LH', 'לחמניות'), ('HL','מוצרי חלב'), ('MZ','מיצים') ,  ('MA', 'מאפים'))
 
-    category = models.CharField(max_length=20, choices=Categories.choices)
+    category = models.CharField(max_length=20, choices=Categories)
     product_name = models.CharField(max_length=30)
     price = models.FloatField()
     picture = models.ImageField()
@@ -59,13 +54,7 @@ class ProdUser(models.Model):
 
     weekDay = ((6,'יום ראשון'),(0,'יום שני'),(1,'יום שלישי'),(2,'יום רביעי'),(3,'יום חמישי'),(4,'יום שישי'))
 
-    def get_tmrw():
-        weekday=date.now().weekday()
-        if weekday==4:
-            return weekday+2
-        return (weekday+1) % 7
-
-    day = models.IntegerField(default=get_tmrw(), choices=weekDay)
+    day = models.IntegerField(choices=weekDay)
     is_active = models.BooleanField(default=True)
     create_date=models.DateTimeField(auto_now_add=True)
     until_date=models.DateTimeField(null=True, blank=True)

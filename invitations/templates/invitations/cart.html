@@ -5,13 +5,13 @@
 
 <ul>
     {% for day in daysList %}
-        <li>יום:{{ day.grouper }}
+        <li>{{day.list.0.get_day_display}}:
             <ul>
             {% for produser in day.list %}
                 <li>{{ produser.product.name }}<br>
                     <img src="{{ produser.product.picture.url }}" width="100px" height="100px" alt=""><br>
-                    מחיר:{{ produser.product.price }}
-                    כמות:{{ produser.amount }}
+                    מחיר: {{ produser.product.price }}
+                    כמות: {{ produser.amount }}
                 </li>
             {% endfor %}
             </ul>

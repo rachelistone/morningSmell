@@ -53,10 +53,15 @@ class ProdUserAddForm(forms.ModelForm):
     weekDay = ((6,'יום ראשון'),(0,'יום שני'),(1,'יום שלישי'),(2,'יום רביעי'),(3,'יום חמישי'),(4,'יום שישי'))
 
     def get_tmrw():
-        weekday=date.now().weekday()
+        weekday = date.now().weekday()
+        hour = date.now().time().hour
         if weekday==4:
-            return weekday+2
-        return (weekday+1) % 7
+            return 6
+        if hour < 20:
+            return (weekday+1) % 7
+        else:
+            return (weekday+2) % 7
+
     day = forms.ChoiceField(label="היום הנבחר:", choices=weekDay, initial=get_tmrw())
     class Meta:
         model = ProdUser

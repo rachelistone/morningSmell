@@ -7,42 +7,27 @@
 		<p>{{message}}</p>
 		<a href="{% url 'cart' %}">לצפייה בתפריט</a>
 	{% endif %}
-	<h1  class="title">לחמניות</h1>
-	{% for product in products_lc %}
-	<div class="col-lg-4">
-		<div class="box-element">
-		<img class="image" src="{{ product.picture.url }}" width="200px" height="200px" alt="">
-		<div class="under-pic">
-			<p>{{product.product_name}}</p>
-			<p>{{product.price}}</p>
-			<form action="{% url 'products' %}" method ="POST">
-				{% csrf_token %}
-				<fieldset display="block" class="add">{{form.as_p}}</fieldset>
-				<input name="product" type="hidden" value="{{product.id}}">
-				<button class="mybtn" type="submit" >הוסף לסל</button>
-			</form>
+	{% regroup products by category as catList %}
+	{% for cat in catList %}
+		<h1  class="title">{{ cat.list.0.get_category_display }}</h1>
+		{% for product in cat.list %}
+		<div class="col-lg-4">
+			<div class="box-element">
+			<img class="image" src="{{ product.picture.url }}" width="200px" height="200px" alt="">
+			<div class="under-pic">
+				<p>{{product.product_name}}</p>
+				<p>{{product.price}}</p>
+				<form action="{% url 'products' %}" method ="POST">
+					{% csrf_token %}
+					<fieldset display="block" class="add">{{form.as_p}}</fieldset>
+					<input name="product" type="hidden" value="{{product.id}}">
+					<button class="mybtn" type="submit" >הוסף לסל</button>
+				</form>
+			</div>
+			</div>
 		</div>
-		</div>
-	</div>
+		{% endfor %}
 	{% endfor %}
 
-	<h1  class="title">מיצים</h1>
-	{% for product in products_mz %}
-	<div class="col-lg-4">
-		<div class="box-element">
-		<img class="image" src="{{ product.picture.url }}" width="200px" height="200px" alt="">
-		<div class="under-pic">
-			<p>{{product.product_name}}</p>
-			<p>{{product.price}}</p>
-			<form action="{% url 'products' %}" method ="POST">
-				{% csrf_token %}
-				<fieldset display="block" class="add">{{form.as_p}}</fieldset>
-				<input name="product" type="hidden" value="{{product.id}}">
-				<button class="mybtn" type="submit" >הוסף לסל</button>
-			</form>
-		</div>
-		</div>
-	</div>
-	{% endfor %}
-</div>
+
 {% endblock %}
