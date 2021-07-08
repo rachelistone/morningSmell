@@ -42,13 +42,23 @@ def profil(request):
 @login_required
 def address(request):
     if request.method == 'GET':
-        return render(request, 'invitations/address-update.html', {'form': AddressForm()})
+        if Address.objects.filter(user=request.user):
+            oldAddress = get_object_or_404(Address, user=request.user)
+            form = AddressForm(instance=oldAddress)
+        else:
+            form = AddressForm()
+        return render(request, 'invitations/address-update.html', {'form': form})
     else:
         try:
-            form = AddressForm(request.POST)
-            address = form.save(commit=False)
-            address.user = request.user
-            address.save()
+            if Address.objects.filter(user=request.user):
+                oldAddress = get_object_or_404(Address, user=request.user)
+                form = AddressForm(request.POST, instance=oldAddress)
+                form.save()
+            else:
+                form = AddressForm(request.POST)
+                address = form.save(commit=False)
+                address.user = request.user
+                address.save()
             return redirect('profil')
         except ValueError:
             return render(request, 'invitations/address-update.html', {'form': AddressForm(), 'error':'כתובת לא מתאימה'})
