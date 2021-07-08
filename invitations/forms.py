@@ -50,17 +50,17 @@ class AddressForm(forms.ModelForm):
 
 class ProdUserAddForm(forms.ModelForm):
     amount = forms.IntegerField(label="בחר כמות:")
-    weekDay = ((6,'יום ראשון'),(0,'יום שני'),(1,'יום שלישי'),(2,'יום רביעי'),(3,'יום חמישי'),(4,'יום שישי'))
+    weekDay = ((0,'יום ראשון'),(1,'יום שני'),(2,'יום שלישי'),(3,'יום רביעי'),(4,'יום חמישי'),(5,'יום שישי'))
 
     def get_tmrw():
-        weekday = date.now().weekday()
+        weekday = date.now().weekday() # monday is 0 and sunday is 6
         hour = date.now().time().hour
-        if weekday==4:
-            return 6
+        if weekday==4: #friday
+            return 0
         if hour < 20:
-            return (weekday+1) % 7
-        else:
             return (weekday+2) % 7
+        else:
+            return (weekday+3) % 7
 
     day = forms.ChoiceField(label="היום הנבחר:", choices=weekDay, initial=get_tmrw())
     class Meta:

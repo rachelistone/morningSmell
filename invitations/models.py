@@ -52,7 +52,7 @@ class ProdUser(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount = models.IntegerField()
 
-    weekDay = ((6,'יום ראשון'),(0,'יום שני'),(1,'יום שלישי'),(2,'יום רביעי'),(3,'יום חמישי'),(4,'יום שישי'))
+    weekDay = ((0,'יום ראשון'),(1,'יום שני'),(2,'יום שלישי'),(3,'יום רביעי'),(4,'יום חמישי'),(5,'יום שישי'))
 
     day = models.IntegerField(choices=weekDay)
     is_active = models.BooleanField(default=True)

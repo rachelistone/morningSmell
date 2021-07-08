@@ -28,7 +28,7 @@ def products(request):
 
 @login_required
 def cart(request):
-    myproducts = ProdUser.objects.filter(user=request.user)
+    myproducts = ProdUser.objects.filter(user=request.user).order_by('day')
     return render(request, 'invitations/cart.html', {'content':myproducts})
 
 @login_required
