@@ -56,8 +56,18 @@ class ProdUser(models.Model):
 
     day = models.IntegerField(choices=weekDay)
     is_active = models.BooleanField(default=True)
-    create_date=models.DateTimeField(auto_now_add=True)
-    until_date=models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username}, {self.product.product_name}"
+
+    def price_for_prod(self):
+        return self.product.price * self.amount
+
+class BuyHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    amount = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.date}, {self.user.username}, {self.product.product_name}"
