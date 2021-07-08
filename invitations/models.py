@@ -32,7 +32,7 @@ class Product(models.Model):
         return self.product_name
 
 class Address(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     town = models.CharField(max_length=30, verbose_name='עיר')
     street = models.CharField(max_length=50, verbose_name='רחוב')
     house_num = models.IntegerField(verbose_name='מספר בית')
