@@ -29,12 +29,26 @@ def products(request):
 @login_required
 def cart(request):
     myproducts = ProdUser.objects.filter(user=request.user).order_by('day')
-    return render(request, 'invitations/cart.html', {'content':myproducts})
+    if request.method == 'GET':
+        return render(request, 'invitations/cart.html', {'content':myproducts, 'Alldays': ProdUser.weekDay})
+    else:
+        produser = get_object_or_404(ProdUser, pk=request.POST['produser'])
+        if request.POST.get('what') == 'remove':
+            produser.is_active = False
+        elif request.POST.get('what') == 'update':
+            return render(request, 'invitations/cart.html',
+                          {'content': myproducts, 'Alldays': ProdUser.weekDay, 'form': ProdUserAddForm(instance=produser)})
+        elif request.POST.get('what') == 'updateWithData':
+            produser.day = request.POST.get('day')
+            produser.amount = request.POST.get('amount')
+            produser.save()
+        return redirect('cart')
+
 
 @login_required
 def profil(request):
     if Address.objects.filter(user=request.user):
-        content = {'address': get_object_or_404(Address, user=request.user), 'addr':1}
+        content = {'user': request.user, 'address': get_object_or_404(Address, user=request.user), 'addr':1}
         return render(request, 'invitations/profil.html', content)
     else:
         return render(request, 'invitations/profil.html')
@@ -109,14 +123,8 @@ def usersignup(request):
         else:
             # tell the user that password didnt match
             return render(request, 'invitations/user-signup.html',
-                          {'form': UserCreationForm(), 'error': 'הסיסמאות אינם תואמות'})
-    #     form = UserRegistrationForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         username = form.cleaned_data.get('username')
-    #         messages.success(request, f'נוצר חשבון עבור{username}')
-    #         return redirect('products')
-    # return render(request, 'invitations/user-signup.html', {'form': form})
+                          {'form': UserRegistrationForm(), 'error': 'הסיסמאות אינם תואמות'})
+
 
 def userlogin(request):
     if request.method == 'GET':

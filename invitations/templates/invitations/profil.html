@@ -1,9 +1,16 @@
 {% extends 'invitations/base.html' %}
 {% block content %}
 <h3 class="title">פרטי הפרופיל שלי</h3>
+<div class="content-section">
+    <b>שם משתמש:</b><p>{{user.username}}</p>
+    <b>כתובת מייל:</b><p>{{user.email}}</p>
+    {% if user.phone %}
+    <b>מספר טלפון:</b><p>{{user.phone}}</p>
+    {% endif  %}
+</div>
 {% if addr %}
 <div class="content-section">
-    <h4>כתובת:</h4>
+    <b>כתובת:</b>
     <ul>
     {% for name, value in address.get_fields %}
     {% if value != 'None' and name != 'ID' and name != 'user' %}
