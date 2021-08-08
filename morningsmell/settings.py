@@ -131,5 +131,5 @@ MEDIA_ROOT = path.join(BASE_DIR, 'media')
 
 try:
     from .local_settings import *
-except:
+except ImportError:
     print("no local settings")
