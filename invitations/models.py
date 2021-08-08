@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime as date
 from django.conf import settings
 
 
@@ -21,13 +20,9 @@ class Contact(models.Model):
 User.add_to_class('phone',models.CharField(blank=True, null=True, max_length=10))
 
 class Product(models.Model):
-    class Categories(models.TextChoices):
-        LH = 'לחמניות'
-        HL = 'מוצרי חלב'
-        MZ = 'מיצים'
-        MA = 'מאפים'
+    Categories = (( 'LH', 'לחמניות'), ('HL','מוצרי חלב'), ('MZ','מיצים') ,  ('MA', 'מאפים'))
 
-    category = models.CharField(max_length=20, choices=Categories.choices)
+    category = models.CharField(max_length=20, choices=Categories)
     product_name = models.CharField(max_length=30)
     price = models.FloatField()
     picture = models.ImageField()
@@ -37,7 +32,7 @@ class Product(models.Model):
         return self.product_name
 
 class Address(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     town = models.CharField(max_length=30, verbose_name='עיר')
     street = models.CharField(max_length=50, verbose_name='רחוב')
     house_num = models.IntegerField(verbose_name='מספר בית')
@@ -57,18 +52,21 @@ class ProdUser(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount = models.IntegerField()
 
-    weekDay = ((6,'SUNDAY'),(0,'MONDAY'),(1,'TUESDAY'),(2,'WEDNESDAY'),(3,'THURSDAY'),(4,'FRIDAY'))
+    weekDay = ((0,'יום ראשון'),(1,'יום שני'),(2,'יום שלישי'),(3,'יום רביעי'),(4,'יום חמישי'),(5,'יום שישי'))
 
-    def get_tmrw():
-        weekday=date.now().weekday()
-        if weekday==4:
-            return weekday+2
-        return (weekday+1) % 7
-
-    day = models.IntegerField(default=get_tmrw(), choices=weekDay)
-    is_active = models.BooleanField(default=True)
-    create_date=models.DateTimeField(auto_now_add=True)
-    until_date=models.DateTimeField(null=True, blank=True)
+    day = models.IntegerField(choices=weekDay)
 
     def __str__(self):
         return f"{self.user.username}, {self.product.product_name}"
+
+    def price(self):
+        return self.product.price * self.amount
+
+class BuyHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    amount = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.date}, {self.user.username}, {self.product.product_name}"

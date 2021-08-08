@@ -1,4 +1,13 @@
 {% extends 'invitations/base.html' %}
 {% block content %}
-<h3>checksum</h3>
+<form method="POST">
+    <h3 class="title">הכתובת שלך</h3>
+    {% csrf_token %}
+    <fieldset>{{address.as_p}}</fieldset>
+    <h3 class="title">פרטי אשראי</h3>
+    <fieldset></fieldset>
+    <div class="btn-wrapper">
+    <button class="color-btn" type="submit">אישור</button>
+    </div>
+</form>
 {% endblock %}

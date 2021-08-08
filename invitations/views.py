@@ -1,54 +1,105 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Contact, Product, Address
+from .models import Contact, Product, Address, ProdUser
 from django.contrib import messages
 from django.db import IntegrityError
-from .forms import UserRegistrationForm, ContactForm, UserLoginForm, AddressForm
+from .forms import UserRegistrationForm, ContactForm, UserLoginForm, AddressForm, ProdUserAddForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+# from rest_framework import viewsets
+# from .serializers import AddressSerializer
+#
+# class AddressViewSet(viewsets.ModelViewSet):
+#     queryset = Address.objects.all()
+#     serializer_class = AddressSerializer
 
 def home(request):
     content = {}
     return render(request, 'invitations/home.html', content)
-    
+
 def products(request):
+    products = Product.objects.all()
     if request.method=='GET':
-        products_lc = Product.objects.filter(category='לחמניות')
-        products_mz = Product.objects.filter(category='מיצים')
-        return render(request, 'invitations/products.html', {'products_lc': products_lc, 'products_mz': products_mz})
+        return render(request, 'invitations/products.html', {'products': products, 'form': ProdUserAddForm()})
     else:
-        pass
+        try:
+            form = ProdUserAddForm(request.POST)
+            prodUser = form.save(commit=False)
+            prodUser.user = request.user
+            prodUser.product = get_object_or_404(Product, pk=request.POST['product'])
+            prodUser.save()
+            return render(request, 'invitations/products.html', {'products': products, 'form': ProdUserAddForm(), 'message':'הפריט נוסף בהצלחה!'})
+        except ValueError:
+            return redirect('login')
 
+@login_required
 def cart(request):
-    content = {}
-    return render(request, 'invitations/cart.html', content)
+    myproducts = ProdUser.objects.filter(user=request.user).order_by('day')
+    totalPrice = 0
+    for prod in myproducts:
+        totalPrice += prod.price()
 
+    if request.method == 'GET':
+        return render(request, 'invitations/cart.html', {'content':myproducts, 'Alldays': ProdUser.weekDay, 'sum':totalPrice})
+    else:
+        produser = get_object_or_404(ProdUser, pk=request.POST['produser'])
+        if request.POST.get('what') == 'remove':
+            ProdUser.objects.filter(id=produser.id).delete()
+        elif request.POST.get('what') == 'update':
+            return render(request, 'invitations/cart.html',
+                          {'content': myproducts, 'Alldays': ProdUser.weekDay, 'form': ProdUserAddForm(instance=produser)})
+        elif request.POST.get('what') == 'updateWithData':
+            produser.day = request.POST.get('day')
+            produser.amount = request.POST.get('amount')
+            produser.save()
+        return redirect('cart')
+
+
+@login_required
 def profil(request):
     if Address.objects.filter(user=request.user):
-        content = {'address': get_object_or_404(Address, user=request.user), 'addr':1}
+        content = {'user': request.user, 'address': get_object_or_404(Address, user=request.user), 'addr':1}
         return render(request, 'invitations/profil.html', content)
     else:
         return render(request, 'invitations/profil.html')
 
+@login_required
 def address(request):
     if request.method == 'GET':
-        return render(request, 'invitations/address-update.html', {'form': AddressForm()})
+        if Address.objects.filter(user=request.user):
+            oldAddress = get_object_or_404(Address, user=request.user)
+            form = AddressForm(instance=oldAddress)
+        else:
+            form = AddressForm()
+        return render(request, 'invitations/address-update.html', {'form': form})
     else:
         try:
-            form = AddressForm(request.POST)
-            address = form.save(commit=False)
-            address.user = request.user
-            address.save()
+            if Address.objects.filter(user=request.user):
+                oldAddress = get_object_or_404(Address, user=request.user)
+                form = AddressForm(request.POST, instance=oldAddress)
+                form.save()
+            else:
+                form = AddressForm(request.POST)
+                address = form.save(commit=False)
+                address.user = request.user
+                address.save()
             return redirect('profil')
         except ValueError:
             return render(request, 'invitations/address-update.html', {'form': AddressForm(), 'error':'כתובת לא מתאימה'})
 
+@login_required
 def history(request):
     content = {}
     return render(request, 'invitations/history.html')
-    
+
+@login_required
 def checkout(request):
-    content = {}
-    return render(request, 'invitations/checkout.html', content)
+    if Address.objects.filter(user=request.user):
+        address = get_object_or_404(Address, user=request.user)
+        addressForm = AddressForm(instance=address)
+    else:
+        addressForm = AddressForm()
+    return render(request, 'invitations/checkout.html', {'address':addressForm})
     
 def contact(request):
     if request.user.is_authenticated:
@@ -86,14 +137,8 @@ def usersignup(request):
         else:
             # tell the user that password didnt match
             return render(request, 'invitations/user-signup.html',
-                          {'form': UserCreationForm(), 'error': 'הסיסמאות אינם תואמות'})
-    #     form = UserRegistrationForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         username = form.cleaned_data.get('username')
-    #         messages.success(request, f'נוצר חשבון עבור{username}')
-    #         return redirect('products')
-    # return render(request, 'invitations/user-signup.html', {'form': form})
+                          {'form': UserRegistrationForm(), 'error': 'הסיסמאות אינם תואמות'})
+
 
 def userlogin(request):
     if request.method == 'GET':
@@ -107,6 +152,7 @@ def userlogin(request):
             login(request, user)
             return redirect('cart')
 
+@login_required
 def userlogout(request):
     # print(request,'/n')
     # dir(request)

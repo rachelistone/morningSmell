@@ -1,4 +1,55 @@
 {% extends 'invitations/base.html' %}
 {% block content %}
-<h3>התפריט שלי</h3>
+{% load static %}
+<h3 class = "title">התפריט שלי</h3>
+{% regroup content by day as daysList %}
+
+<ul>
+    {% for day in daysList %}
+        <li>
+            <ul>
+            {% for produser in day.list %}
+                {{day.list.0.get_day_display}}:
+                <li>{{ produser.product.name }}<br>
+                    <b>{{ produser.product.product_name }}</b>
+                    <img src="{{ produser.product.picture.url }}" width="100px" height="100px" alt=""><br>
+                    מחיר: {{ produser.product.price }}
+                    כמות: {{ produser.amount }}
+
+                    <form href="{% url 'cart' %}" method ="POST">
+					{% csrf_token %}
+                    <input name="produser" type="hidden" value="{{produser.id}}">
+                    <input name="what" type="hidden" value='remove'>
+					<button class="mybtn" type="submit" >הסר</button>
+                    </form>
+
+                    <form href="{% url 'cart' %}" method ="POST">
+					{% csrf_token %}
+                    <input name="produser" type="hidden" value="{{produser.id}}">
+                    <input name="what" type="hidden" value='update'>
+					<button class="mybtn" type="submit" >עדכן</button>
+                    </form>
+
+                    {% if form.instance == produser %}
+                        <form href="{% url 'cart' %}" method ="POST">
+                        {% csrf_token %}
+                        <fieldset display="block" class="add">{{form.as_p}}</fieldset>
+                        <input name="what" type="hidden" value='updateWithData'>
+                        <input name="produser" type="hidden" value="{{produser.id}}">
+                        <button class="mybtn" type="submit" >שמור</button>
+                        </form>
+                    {% endif %}
+
+                </li>
+            {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
+<hr>
+<h1  class="title">סך הכל לשבוע:</h1>
+<h4>{{sum}} ש"ח</h4>
+<br>
+<a href="{% url 'checkout' %}" class="mybtn" >אישור הזמנה</a>
+<script src="{% static 'javascript/cart.js' %}"></script>
 {% endblock %}
