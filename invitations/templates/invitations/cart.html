@@ -9,7 +9,6 @@
         <li>
             <ul>
             {% for produser in day.list %}
-                {% if produser.is_active == True %}
                 {{day.list.0.get_day_display}}:
                 <li>{{ produser.product.name }}<br>
                     <b>{{ produser.product.product_name }}</b>
@@ -42,7 +41,6 @@
                     {% endif %}
 
                 </li>
-                {% endif %}
             {% endfor %}
             </ul>
         </li>
@@ -50,6 +48,8 @@
 </ul>
 <hr>
 <h1  class="title">סך הכל לשבוע:</h1>
-<button class="mybtn" type="submit" >לתשלום</button>
+<h4>{{sum}} ש"ח</h4>
+<br>
+<a href="{% url 'checkout' %}" class="mybtn" >אישור הזמנה</a>
 <script src="{% static 'javascript/cart.js' %}"></script>
 {% endblock %}

@@ -55,12 +55,11 @@ class ProdUser(models.Model):
     weekDay = ((0,'יום ראשון'),(1,'יום שני'),(2,'יום שלישי'),(3,'יום רביעי'),(4,'יום חמישי'),(5,'יום שישי'))
 
     day = models.IntegerField(choices=weekDay)
-    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.user.username}, {self.product.product_name}"
 
-    def price_for_prod(self):
+    def price(self):
         return self.product.price * self.amount
 
 class BuyHistory(models.Model):

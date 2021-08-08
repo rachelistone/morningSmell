@@ -6,6 +6,12 @@ from .forms import UserRegistrationForm, ContactForm, UserLoginForm, AddressForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+# from rest_framework import viewsets
+# from .serializers import AddressSerializer
+#
+# class AddressViewSet(viewsets.ModelViewSet):
+#     queryset = Address.objects.all()
+#     serializer_class = AddressSerializer
 
 def home(request):
     content = {}
@@ -29,12 +35,16 @@ def products(request):
 @login_required
 def cart(request):
     myproducts = ProdUser.objects.filter(user=request.user).order_by('day')
+    totalPrice = 0
+    for prod in myproducts:
+        totalPrice += prod.price()
+
     if request.method == 'GET':
-        return render(request, 'invitations/cart.html', {'content':myproducts, 'Alldays': ProdUser.weekDay})
+        return render(request, 'invitations/cart.html', {'content':myproducts, 'Alldays': ProdUser.weekDay, 'sum':totalPrice})
     else:
         produser = get_object_or_404(ProdUser, pk=request.POST['produser'])
         if request.POST.get('what') == 'remove':
-            produser.is_active = False
+            ProdUser.objects.filter(id=produser.id).delete()
         elif request.POST.get('what') == 'update':
             return render(request, 'invitations/cart.html',
                           {'content': myproducts, 'Alldays': ProdUser.weekDay, 'form': ProdUserAddForm(instance=produser)})
@@ -84,8 +94,12 @@ def history(request):
 
 @login_required
 def checkout(request):
-    content = {}
-    return render(request, 'invitations/checkout.html', content)
+    if Address.objects.filter(user=request.user):
+        address = get_object_or_404(Address, user=request.user)
+        addressForm = AddressForm(instance=address)
+    else:
+        addressForm = AddressForm()
+    return render(request, 'invitations/checkout.html', {'address':addressForm})
     
 def contact(request):
     if request.user.is_authenticated:
