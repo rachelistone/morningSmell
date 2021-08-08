@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent
 SECRET_KEY = '_+opr7(&jg54h!pn%cgotzqa(#da)h&h$n@cchx0!5!ds0rtyz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['reachaboker.pythonanywhere.com']
 
 # Application definition
 
@@ -108,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'israel'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -121,9 +121,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    path.join(BASE_DIR, 'static')
-]
+# STATICFILES_DIRS = [
+#     path.join(BASE_DIR, 'static')
+# ]
+STATIC_ROOT = path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = path.join(BASE_DIR, 'media')
+
+try:
+    from .local_settings import *
+except:
+    print("no local settings")
