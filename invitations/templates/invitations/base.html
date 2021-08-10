@@ -12,34 +12,32 @@
 	<body dir=rtl>
 	<header>
 		<nav>
-			<div class="wrapper">
-				<ul class="nav_links">
+			<div class="menu-wrapper">
+			    <h1 class="menu-btn">פעולות&gt;</h1>
+				<ul class="menu-content">
 					<li><a href="{% url 'home' %}" class="menu-elem">ראשי</a></li>
 					<li><a href="{% url 'products' %}" class="menu-elem">בחירת מוצרים</a></li>
 					<li><a href="{% url 'contact' %}" class="menu-elem">צור קשר</a></li>
-				</ul>
-				{% if user.is_authenticated %}
-				<ul class="nav_links">
+				    {% if user.is_authenticated %}
 					<li><a href="{% url 'profil' %}" class="menu-elem">הפרטים שלי</a></li>
 					<li><a href="{% url 'cart' %}" class="menu-elem">התפריט שלי</a></li>
-					<li><a href="{% url 'history' %}" class="menu-elem">היסטוריה</a></li>
+					<li><a href="{% url 'history' %}" class="menu-elem">היסטוריה</a></li
+					{% endif %}>
 				</ul>
-				{% endif %}
 			</div>
 		</nav>
 		<div class="logo"><img width="250px" src="{% static 'images/logomorningsmell.png' %}"></div>
 		{% if user.is_authenticated %}
-        <div>החשבון של {{user}}</div>
-        <br>
-        <form action="{% url 'logout' %}" method="POST">
+        <form class = "left-btn" action="{% url 'logout' %}" method="POST">
             {% csrf_token %}
+            <div class="btn-wrapper">החשבון של {{user}}</div>
 			<div class="btn-wrapper"><button type="submit" class="color-btn">התנתק</button></div>
         </form>
 
 		{% else %}
 		<div class="left-btn">
+		    <div class="btn-wrapper"><a href="{% url 'login' %}" class="color-btn">כניסה</a></div>
 			<div class="btn-wrapper"><a href="{% url 'signup' %}" class="color-btn">הרשמה</a></div>
-			<div class="btn-wrapper"><a href="{% url 'login' %}" class="color-btn">כניסה</a></div>
 		</div>
 		{% endif %}
 	</header>

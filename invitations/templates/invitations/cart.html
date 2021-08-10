@@ -7,9 +7,9 @@
 <ul>
     {% for day in daysList %}
         <li>
+            <h3>{{day.list.0.get_day_display}}</h3>
             <ul>
             {% for produser in day.list %}
-                {{day.list.0.get_day_display}}:
                 <li>{{ produser.product.name }}<br>
                     <b>{{ produser.product.product_name }}</b>
                     <img src="{{ produser.product.picture.url }}" width="100px" height="100px" alt=""><br>
@@ -43,10 +43,10 @@
                 </li>
             {% endfor %}
             </ul>
+            <hr>
         </li>
     {% endfor %}
 </ul>
-<hr>
 <h1  class="title">סך הכל לשבוע:</h1>
 <h4>{{sum}} ש"ח</h4>
 <br>
