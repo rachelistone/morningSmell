@@ -1,10 +1,9 @@
 *{box-sizing:border-box;margin:0;padding:0px;}
 body{background: linear-gradient(to left bottom,rgb(255, 179, 0),rgb(255, 240, 204));}
 
+/* navigation bar */
 header {display:flex;justify-content:space-around;align-items:center;background-color:black;height:100px;}
 ul {list-style: none;}
-.logo {}
-
 .menu-btn{font-weight:bold;color: #FFEAB8;font-size:25px;padding:8px;cursor: pointer;}
 .menu-btn:hover{color: #ffd980;}
 .menu-wrapper{display: inline-block;position:relative;}
@@ -12,15 +11,12 @@ ul {list-style: none;}
 .menu-content{ display: none;position:absolute;z-index: 1;box-shadow:-2px 2px 18px black;right:70px;width:135px;}
 .menu-content li a {text-decoration: none;background-color: #ffd980;color:black;font-size:18px;display: block;padding:10px;width:135px;}
 .menu-content li a:hover {color: #ffd980;background-color:black;}
-/*.menu-wrapper {display:flex;list-style: none;align-items:flex-start;}*/
-/*.menu-wrapper li {padding:3px;border:2px;}*/
-/*.menu-wrapper li a {text-decoration: none;color: #FFEAB8;font-size:18px;}*/
-/*.menu-wrapper li a:hover {color: #ffd980;}*/
 
 .left-btn{display:flex;justify-content:space-between;align-items:center;}
 .color-btn{text-decoration:none;padding:8px;background:#ffc94d;color:black;font-size:1.2rem;border:solid 2px;}
 .color-btn:hover{color:#FFEAB8;background:black;}
 .content {padding:10%;}
+.btn-wrapper{padding:8px;}
 
 .title {text-align:center;margin:0 0 50px 0;font-weight:bold;}
 
@@ -28,10 +24,10 @@ ul {list-style: none;}
 .what {padding:15%;font-size:3rem;text-align:center;color:black;}
 .how {padding:10%;font-size:3rem;background-color:black;text-align:center;}
 .how h1 {color:#FFEAB8;}
-.btn-wrapper{padding:8px;}
 
 /*cart*/
 .box-element {padding:15px;}
+.cart-item {display:flex;justify-content:space-between;}
 .under-pic{}
-.mybtn{text-decoration:none;padding:5px;background:black;color:#ffc94d;font-size:1.2rem;}
+.mybtn{text-decoration:none;padding:5px;background:black;color:#ffc94d;margin:5px;width:100px}
 .mybtn:hover{background:#ffc94d;color:black;border:solid 2px;}

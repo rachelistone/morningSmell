@@ -38,20 +38,32 @@ def cart(request):
     totalPrice = 0
     for prod in myproducts:
         totalPrice += prod.price()
+    content = {'content':myproducts, 'Alldays': ProdUser.weekDay, 'sum':totalPrice}
 
     if request.method == 'GET':
-        return render(request, 'invitations/cart.html', {'content':myproducts, 'Alldays': ProdUser.weekDay, 'sum':totalPrice})
+        return render(request, 'invitations/cart.html', content)
     else:
         produser = get_object_or_404(ProdUser, pk=request.POST['produser'])
-        if request.POST.get('what') == 'remove':
+        action = request.POST.get('what')
+        if action == 'remove':
             ProdUser.objects.filter(id=produser.id).delete()
-        elif request.POST.get('what') == 'update':
-            return render(request, 'invitations/cart.html',
-                          {'content': myproducts, 'Alldays': ProdUser.weekDay, 'form': ProdUserAddForm(instance=produser)})
-        elif request.POST.get('what') == 'updateWithData':
+        elif action == 'moveToDay':
+            content['form'] = ProdUserAddForm(instance=produser)
+            content['action'] = 'moveToDay'
+            return render(request, 'invitations/cart.html', content)
+        elif action == 'moveToDayData':
             produser.day = request.POST.get('day')
-            produser.amount = request.POST.get('amount')
             produser.save()
+        elif action == 'copyToDay':
+            content['form'] = ProdUserAddForm(instance=produser)
+            content['action'] = 'copyToDay'
+            return render(request, 'invitations/cart.html', content)
+        elif action == 'copyToDayData':
+            day = request.POST.get('day')
+            amount = request.POST.get('amount')
+            if produser.day != day:
+                newProduser = ProdUser(day=day, amount=amount, product=produser.product,user=produser.user)
+                newProduser.save()
         return redirect('cart')
 
 
