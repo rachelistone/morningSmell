@@ -27,7 +27,8 @@ ul {list-style: none;}
 
 /*cart*/
 .box-element {padding:15px;}
+.cart-actions {display:flex;}
 .cart-item {display:flex;justify-content:space-between;}
 .under-pic{}
-.mybtn{text-decoration:none;padding:5px;background:black;color:#ffc94d;margin:5px;width:100px}
+.mybtn{text-decoration:none;padding:4px;background:black;color:#ffc94d;margin:5px;width:90px;font-size:0.8rem}
 .mybtn:hover{background:#ffc94d;color:black;border:solid 2px;}

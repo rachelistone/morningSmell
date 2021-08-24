@@ -64,6 +64,13 @@ def cart(request):
             if produser.day != day:
                 newProduser = ProdUser(day=day, amount=amount, product=produser.product,user=produser.user)
                 newProduser.save()
+        elif action == 'updateAmount':
+            content['form'] = ProdUserAddForm(instance=produser)
+            content['action'] = 'updateAmount'
+            return render(request, 'invitations/cart.html', content)
+        elif action == 'updateAmountData':
+            produser.amount = request.POST.get('amount')
+            produser.save()
         return redirect('cart')
 
 

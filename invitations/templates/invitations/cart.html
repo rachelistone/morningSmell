@@ -18,44 +18,64 @@
                         <h6>כמות: {{ produser.amount }}</h6>
 
                         <div class="cart-actions">
-                            <form href="{% url 'cart' %}" method ="POST">
-                            {% csrf_token %}
-                            <input name="produser" type="hidden" value="{{produser.id}}">
-                            <input name="what" type="hidden" value='remove'>
-                            <button class="mybtn" type="submit" >מחק מהיום</button>
-                            </form>
-
-                            <form href="{% url 'cart' %}" method ="POST">
-                            {% csrf_token %}
-                            <input name="produser" type="hidden" value="{{produser.id}}">
-                            <input name="what" type="hidden" value='moveToDay'>
-                            <button class="mybtn" type="submit" >העבר יום</button>
-                            </form>
-                            {% if form.instance == produser and action == 'moveToDay' %}
-                            <form href="{% url 'cart' %}" method ="POST">
+                            <div>
+                                <form href="{% url 'cart' %}" method ="POST">
                                 {% csrf_token %}
-                                <fieldset display="block" class="add">{{form.day}}</fieldset>
-                                <input name="what" type="hidden" value='moveToDayData'>
                                 <input name="produser" type="hidden" value="{{produser.id}}">
-                                <button class="mybtn" type="submit" >שמור</button>
-                            </form>
-                            {% endif %}
+                                <input name="what" type="hidden" value='remove'>
+                                <button class="mybtn" type="submit" >מחק מהיום</button>
+                                </form>
 
-                            <form href="{% url 'cart' %}" method ="POST">
-                            {% csrf_token %}
-                            <input name="produser" type="hidden" value="{{produser.id}}">
-                            <input name="what" type="hidden" value='copyToDay'>
-                            <button class="mybtn" type="submit" >העתק ליום</button>
-                            </form>
-                            {% if form.instance == produser and action == 'copyToDay' %}
-                            <form href="{% url 'cart' %}" method ="POST">
+                                                            <form href="{% url 'cart' %}" method ="POST">
                                 {% csrf_token %}
-                                <fieldset display="block" class="add">{{form.as_p}}</fieldset>
-                                <input name="what" type="hidden" value='copyToDayData'>
                                 <input name="produser" type="hidden" value="{{produser.id}}">
-                                <button class="mybtn" type="submit" >שמור</button>
-                            </form>
-                            {% endif %}
+                                <input name="what" type="hidden" value='updateAmount'>
+                                <button class="mybtn" type="submit" >שינוי כמות</button>
+                                </form>
+                                {% if form.instance == produser and action == 'updateAmount' %}
+                                <form href="{% url 'cart' %}" method ="POST">
+                                    {% csrf_token %}
+                                    <fieldset display="block" class="add">{{form.amount}}</fieldset>
+                                    <input name="what" type="hidden" value='updateAmountData'>
+                                    <input name="produser" type="hidden" value="{{produser.id}}">
+                                    <button class="mybtn" type="submit" >שמור</button>
+                                </form>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <form href="{% url 'cart' %}" method ="POST">
+                                {% csrf_token %}
+                                <input name="produser" type="hidden" value="{{produser.id}}">
+                                <input name="what" type="hidden" value='moveToDay'>
+                                <button class="mybtn" type="submit" >העבר יום</button>
+                                </form>
+                                {% if form.instance == produser and action == 'moveToDay' %}
+                                <form href="{% url 'cart' %}" method ="POST">
+                                    {% csrf_token %}
+                                    <fieldset display="block" class="add">{{form.day}}</fieldset>
+                                    <input name="what" type="hidden" value='moveToDayData'>
+                                    <input name="produser" type="hidden" value="{{produser.id}}">
+                                    <button class="mybtn" type="submit" >שמור</button>
+                                </form>
+                                {% endif %}
+
+                                <form href="{% url 'cart' %}" method ="POST">
+                                {% csrf_token %}
+                                <input name="produser" type="hidden" value="{{produser.id}}">
+                                <input name="what" type="hidden" value='copyToDay'>
+                                <button class="mybtn" type="submit" >העתק ליום</button>
+                                </form>
+                                {% if form.instance == produser and action == 'copyToDay' %}
+                                <form href="{% url 'cart' %}" method ="POST">
+                                    {% csrf_token %}
+                                    <fieldset display="block" class="add">{{form.as_p}}</fieldset>
+                                    <input name="what" type="hidden" value='copyToDayData'>
+                                    <input name="produser" type="hidden" value="{{produser.id}}">
+                                    <button class="mybtn" type="submit" >שמור</button>
+                                </form>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </li>
