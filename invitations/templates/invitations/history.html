@@ -1,4 +1,27 @@
 {% extends 'invitations/base.html' %}
 {% block content %}
 <h3 class="title">היסטוריה</h3>
+{% regroup histories|dictsortreversed:"date" by date|date:"F" as history_monthes %}
+    {% for month in history_monthes %}
+    <br><hr>
+    {% now "F" as this_month %}
+    {% if month.grouper == this_month %}
+    <h3>החודש הנוכחי</h3>
+    {% else %}
+    <h3>{{month.grouper}}</h3>
+    {% endif %}
+        {% for history in month.list %}
+        <div class="history-item">
+            <div><b>{{history.product.product_name}}</b><br>
+            <img src="{{ history.product.picture.url }}" width="100px" height="100px" alt=""></div>
+            <div class="history-details"><h6>מחיר: {{ history.product.price }}</h6>
+            <h6>כמות: {{ history.amount }}</h6>
+            <h6>סה"כ: {{ history.price }}</h6>
+            <h6>תאריך: {{ history.date|date:"d F, Y" }}</h6></div>
+        </div>
+        {%endfor%}
+        {% if month.grouper == this_month %}
+        <br><br><h5> לתשלום החודש: {{priceForThisMonth }}</h5>
+        {% endif %}
+    {%endfor%}
 {% endblock %}

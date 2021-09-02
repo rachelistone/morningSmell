@@ -68,5 +68,8 @@ class BuyHistory(models.Model):
     amount = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)
 
+    def price(self):
+        return self.product.price * self.amount
+
     def __str__(self):
         return f"{self.date}, {self.user.username}, {self.product.product_name}"

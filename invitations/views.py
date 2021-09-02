@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Contact, Product, Address, ProdUser
+from .models import Contact, Product, Address, ProdUser, BuyHistory
 from django.contrib import messages
 from django.db import IntegrityError
 from .forms import UserRegistrationForm, ContactForm, UserLoginForm, AddressForm, ProdUserAddForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from datetime import datetime as dt
 # from rest_framework import viewsets
 # from .serializers import AddressSerializer
 #
@@ -108,8 +109,12 @@ def address(request):
 
 @login_required
 def history(request):
-    content = {}
-    return render(request, 'invitations/history.html')
+    histories = BuyHistory.objects.filter(user=request.user)
+    priceForThisMonth = 0
+    for prod in histories.filter(date__month=dt.now().month):
+        priceForThisMonth += prod.price()
+    content = {'histories':histories, 'priceForThisMonth':priceForThisMonth}
+    return render(request, 'invitations/history.html',content)
 
 @login_required
 def checkout(request):

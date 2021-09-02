@@ -32,3 +32,7 @@ ul {list-style: none;}
 .under-pic{}
 .mybtn{text-decoration:none;padding:4px;background:black;color:#ffc94d;margin:5px;width:90px;font-size:0.8rem}
 .mybtn:hover{background:#ffc94d;color:black;border:solid 2px;}
+
+/* history */
+.history-item{display:flex; padding:10px;}
+.history-details{padding:20px 50px;}

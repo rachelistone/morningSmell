@@ -10,12 +10,13 @@
             <h3>{{day.list.0.get_day_display}}</h3>
             <ul>
             {% for produser in day.list %}
-                <li class = "cart-item-name">{{ produser.product.name }}<br>
+                <li class = "cart-item-name"><br>
                     <b>{{ produser.product.product_name }}</b>
                     <div class="cart-item">
                         <img src="{{ produser.product.picture.url }}" width="100px" height="100px" alt=""><br>
                         <h6>מחיר: {{ produser.product.price }}</h6>
                         <h6>כמות: {{ produser.amount }}</h6>
+                        <h6>סה"כ: {{ produser.price }}</h6>
 
                         <div class="cart-actions">
                             <div>
